@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Student Entry</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+
+      margin: 0;
+
+      font-family: Arial, sans-serif;
+
+      background:
+              linear-gradient(
+                      135deg,
+                      #eef2ff,
+                      #f8fafc
+              );
+
+      min-height: 100vh;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      padding: 20px;
+    }
+
+
+    .card {
+
+      width: 100%;
+
+      max-width: 600px;
+
+      background: white;
+
+      padding: 35px;
+
+      border-radius: 22px;
+
+      box-shadow:
+              0 12px 35px
+              rgba(0,0,0,0.10);
+    }
+
+
+    /* HEADER */
+
+    .header {
+
+      text-align: center;
+
+      margin-bottom: 30px;
+    }
+
+
+    .header-icon {
+
+      font-size: 55px;
+
+      margin-bottom: 10px;
+    }
+
+
+    h1 {
+
+      margin: 5px 0;
+
+      color: #1f2937;
+    }
+
+
+    .subtitle {
+
+      color: #6b7280;
+
+      margin: 0;
+    }
+
+
+    /* NAME */
+
+    .section {
+
+      margin-bottom: 25px;
+    }
+
+
+    .section-title {
+
+      font-size: 16px;
+
+      font-weight: bold;
+
+      margin-bottom: 10px;
+
+      color: #374151;
+    }
+
+
+    input[type="text"] {
+
+      width: 100%;
+
+      padding: 14px 15px;
+
+      border: 2px solid #e5e7eb;
+
+      border-radius: 10px;
+
+      font-size: 16px;
+
+      outline: none;
+
+      transition: 0.2s;
+    }
+
+
+    input[type="text"]:focus {
+
+      border-color: #4f46e5;
+
+      box-shadow:
+              0 0 0 3px
+              rgba(79,70,229,0.1);
+    }
+
+
+    /* AVATARS */
+
+    .avatars {
+
+      display: grid;
+
+      grid-template-columns:
+                    repeat(4, 1fr);
+
+      gap: 15px;
+    }
+
+
+    .avatar {
+
+      border: 2px solid #e5e7eb;
+
+      border-radius: 15px;
+
+      padding: 15px;
+
+      text-align: center;
+
+      cursor: pointer;
+
+      font-size: 38px;
+
+      background: #f9fafb;
+
+      transition: 0.2s;
+    }
+
+
+    .avatar:hover {
+
+      border-color: #818cf8;
+
+      transform: translateY(-2px);
+    }
+
+
+    .avatar.selected {
+
+      border-color: #4f46e5;
+
+      background: #eef2ff;
+
+      box-shadow:
+              0 0 0 3px
+              rgba(79,70,229,0.15);
+    }
+
+
+    /* START BUTTON */
+
+    .start-btn {
+
+      width: 100%;
+
+      padding: 15px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #4f46e5;
+
+      color: white;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      margin-top: 10px;
+
+      transition: 0.2s;
+    }
+
+
+    .start-btn:hover {
+
+      background: #4338ca;
+    }
+
+
+    /* BACK */
+
+    .back {
+
+      display: block;
+
+      text-align: center;
+
+      margin-top: 20px;
+
+      color: #4f46e5;
+
+      text-decoration: none;
+
+      font-weight: bold;
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 500px) {
+
+      .card {
+
+        padding: 25px;
+      }
+
+
+      .avatars {
+
+        grid-template-columns:
+                        repeat(2, 1fr);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+    <div class="header-icon">
+
+      👨‍🎓
+
+    </div>
+
+    <h1>
+
+      Student Entry
+
+    </h1>
+
+    <p class="subtitle">
+
+      Enter your name and choose your avatar
+
+    </p>
+
+  </div>
+
+
+
+  <!-- FORM -->
+
+  <form
+          action="/student"
+          method="post"
+          onsubmit="return validateForm()">
+
+
+    <!-- NAME -->
+
+    <div class="section">
+
+      <div class="section-title">
+
+        👤 Your Name
+
+      </div>
+
+
+      <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter your name"
+              maxlength="30"
+              autocomplete="off"
+              required>
+
+    </div>
+
+
+
+    <!-- AVATAR -->
+
+    <div class="section">
+
+      <div class="section-title">
+
+        🎨 Choose Your Avatar
+
+      </div>
+
+
+      <div class="avatars">
+
+
+        <div
+                class="avatar selected"
+                onclick="selectAvatar(this, '👨‍💻')">
+
+          👨‍💻
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '👩‍💻')">
+
+          👩‍💻
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '🧑‍🎓')">
+
+          🧑‍🎓
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '👨‍🎓')">
+
+          👨‍🎓
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '🧑‍💻')">
+
+          🧑‍💻
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '👩‍🎓')">
+
+          👩‍🎓
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '🦸')">
+
+          🦸
+
+        </div>
+
+
+        <div
+                class="avatar"
+                onclick="selectAvatar(this, '🧠')">
+
+          🧠
+
+        </div>
+
+
+      </div>
+
+
+      <!-- Hidden Avatar -->
+
+      <input
+              type="hidden"
+              name="avatar"
+              id="avatar"
+              value="👨‍💻">
+
+    </div>
+
+
+
+    <!-- START -->
+
+    <button
+            type="submit"
+            class="start-btn">
+
+      🚀 Continue to Quiz
+
+    </button>
+
+
+  </form>
+
+
+
+  <!-- BACK -->
+
+  <a
+          href="/"
+          class="back">
+
+    ← Back to Home
+
+  </a>
+
+
+</div>
+
+
+
+<script>
+
+
+  function selectAvatar(element, avatar) {
+
+
+    // Remove previous selection
+
+    document
+            .querySelectorAll(".avatar")
+            .forEach(function(item) {
+
+              item.classList.remove("selected");
+
+            });
+
+
+    // Select current avatar
+
+    element.classList.add("selected");
+
+
+    // Save avatar
+
+    document.getElementById("avatar").value =
+            avatar;
+
+  }
+
+
+
+  function validateForm() {
+
+
+    const name =
+            document.getElementById("name")
+                    .value
+                    .trim();
+
+
+    if (name.length === 0) {
+
+      alert("Please enter your name.");
+
+      return false;
+    }
+
+
+    return true;
+
+  }
+
+</script>
+
+
+</body>
+
+</html>

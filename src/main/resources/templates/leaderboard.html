@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Leaderboard - Online Quiz</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 92%;
+            max-width: 1150px;
+            margin: 40px auto;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            font-size: 38px;
+            color: #1e293b;
+        }
+
+        .heading p {
+            color: #64748b;
+            margin-top: 8px;
+            font-size: 16px;
+        }
+
+
+        /* ================= FILTER ================= */
+
+        .filter-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .filter-box label {
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .filter-box select {
+            width: 230px;
+            padding: 11px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-box select:focus {
+            border-color: #2563eb;
+        }
+
+
+        /* ================= TOP PERFORMERS ================= */
+
+        .top-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 45px;
+        }
+
+        .podium-card {
+            width: 220px;
+            background: white;
+            border-radius: 18px;
+            padding: 25px 18px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .podium-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .podium-card.first {
+            border-top: 6px solid #f59e0b;
+            transform: translateY(-20px);
+        }
+
+        .podium-card.first:hover {
+            transform: translateY(-26px);
+        }
+
+        .podium-card.second {
+            border-top: 6px solid #94a3b8;
+        }
+
+        .podium-card.third {
+            border-top: 6px solid #cd7f32;
+        }
+
+        .rank {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .podium-card h3 {
+            font-size: 19px;
+            margin-bottom: 7px;
+            color: #1e293b;
+        }
+
+        .category {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .score {
+            font-size: 25px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .percentage {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+
+        /* ================= LEADERBOARD TABLE ================= */
+
+        .leaderboard-box {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.07);
+            overflow: hidden;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-header h2 {
+            font-size: 23px;
+        }
+
+        .result-count {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 15px;
+            text-align: left;
+            color: #475569;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .rank-number {
+            font-weight: bold;
+            font-size: 17px;
+            color: #475569;
+        }
+
+        .student-name {
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .score-cell {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .percentage-cell {
+            font-weight: bold;
+        }
+
+        .pass {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .fail {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #fee2e2;
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 750px) {
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 18px;
+            }
+
+            nav {
+                gap: 15px;
+            }
+
+            .heading h1 {
+                font-size: 30px;
+            }
+
+            .filter-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-box select {
+                width: 100%;
+            }
+
+            .podium {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .podium-card {
+                width: 90%;
+                max-width: 300px;
+            }
+
+            .podium-card.first {
+                order: -1;
+                transform: none;
+            }
+
+            .podium-card.first:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="logo">
+        🧠 Online Quiz
+    </div>
+
+    <nav>
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/student">
+            Take Quiz
+        </a>
+
+        <a href="/leaderboard">
+            Leaderboard
+        </a>
+
+        <a href="/admin/login">
+            Admin
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <!-- HEADING -->
+
+    <div class="heading">
+
+        <h1>
+            🏆 Leaderboard
+        </h1>
+
+        <p>
+            See how you rank among the top quiz performers.
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= FILTER ================= -->
+
+    <form action="/leaderboard"
+          method="get"
+          class="filter-box">
+
+        <label>
+            📚 Select Category
+        </label>
+
+        <select name="category"
+                onchange="this.form.submit()">
+
+            <option value="All"
+                    th:selected="${selectedCategory == 'All'}">
+                All Categories
+            </option>
+
+            <option value="Java"
+                    th:selected="${selectedCategory == 'Java'}">
+                Java
+            </option>
+
+            <option value="DSA"
+                    th:selected="${selectedCategory == 'DSA'}">
+                DSA
+            </option>
+
+            <option value="C Programming"
+                    th:selected="${selectedCategory == 'C Programming'}">
+                C Programming
+            </option>
+
+            <option value="Software Engineering"
+                    th:selected="${selectedCategory == 'Software Engineering'}">
+                Software Engineering
+            </option>
+
+        </select>
+
+    </form>
+
+
+
+    <!-- ================= WHEN RESULTS EXIST ================= -->
+
+    <div th:if="${not #lists.isEmpty(results)}">
+
+
+        <!-- TOP PERFORMERS -->
+
+        <h2 class="top-title">
+            ⭐ Top Performers
+        </h2>
+
+
+        <div class="podium">
+
+
+            <!-- FIRST -->
+
+            <div class="podium-card first"
+                 th:if="${#lists.size(results) >= 1}">
+
+                <div class="rank">
+                    🥇
+                </div>
+
+                <div class="avatar">
+                    🏆
+                </div>
+
+                <h3 th:text="${results[0].name}">
+                    Student
+                </h3>
+
+                <div class="category"
+                     th:text="${results[0].category}">
+                    Java
+                </div>
+
+                <div class="score">
+
+                    <span th:text="${#numbers.formatDecimal(results[0].score, 1, 2)}">
+                        10.00
+                    </span>
+
+                    /
+                    <span th:text="${results[0].total}">
+                        10
+                    </span>
+
+                </div>
+
+                <div class="percentage">
+
+                    <span th:text="${#numbers.formatDecimal((results[0].score * 100.0) / results[0].total, 1, 1)}">
+                        100.0
+                    </span>%
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SECOND -->
+
+            <div class="podium-card second"
+                 th:if="${#lists.size(results) >= 2}">
+
+                <div class="rank">
+                    🥈
+                </div>
+
+                <div class="avatar">
+                    🥈
+                </div>
+
+                <h3 th:text="${results[1].name}">
+                    Student
+                </h3>
+
+                <div class="category"
+                     th:text="${results[1].category}">
+                    Java
+                </div>
+
+                <div class="score">
+
+                    <span th:text="${#numbers.formatDecimal(results[1].score, 1, 2)}">
+                        9.00
+                    </span>
+
+                    /
+                    <span th:text="${results[1].total}">
+                        10
+                    </span>
+
+                </div>
+
+                <div class="percentage">
+
+                    <span th:text="${#numbers.formatDecimal((results[1].score * 100.0) / results[1].total, 1, 1)}">
+                        90.0
+                    </span>%
+
+                </div>
+
+            </div>
+
+
+
+            <!-- THIRD -->
+
+            <div class="podium-card third"
+                 th:if="${#lists.size(results) >= 3}">
+
+                <div class="rank">
+                    🥉
+                </div>
+
+                <div class="avatar">
+                    🥉
+                </div>
+
+                <h3 th:text="${results[2].name}">
+                    Student
+                </h3>
+
+                <div class="category"
+                     th:text="${results[2].category}">
+                    Java
+                </div>
+
+                <div class="score">
+
+                    <span th:text="${#numbers.formatDecimal(results[2].score, 1, 2)}">
+                        8.00
+                    </span>
+
+                    /
+                    <span th:text="${results[2].total}">
+                        10
+                    </span>
+
+                </div>
+
+                <div class="percentage">
+
+                    <span th:text="${#numbers.formatDecimal((results[2].score * 100.0) / results[2].total, 1, 1)}">
+                        80.0
+                    </span>%
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= FULL RANKING ================= -->
+
+        <div class="leaderboard-box">
+
+            <div class="leaderboard-header">
+
+                <h2>
+                    📊 Complete Rankings
+                </h2>
+
+                <span class="result-count"
+                      th:text="${#lists.size(results) + ' Attempts'}">
+                    0 Attempts
+                </span>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Rank
+                        </th>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Score
+                        </th>
+
+                        <th>
+                            Percentage
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    <tr th:each="result, stat : ${results}">
+
+
+                        <!-- RANK -->
+
+                        <td>
+
+                            <span class="rank-number"
+                                  th:text="${stat.index + 1}">
+                                1
+                            </span>
+
+                        </td>
+
+
+                        <!-- STUDENT -->
+
+                        <td>
+
+                            <span class="student-name"
+                                  th:text="${result.name}">
+                                Student
+                            </span>
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td th:text="${result.category}">
+                            Java
+                        </td>
+
+
+                        <!-- SCORE -->
+
+                        <td class="score-cell">
+
+                            <span th:text="${#numbers.formatDecimal(result.score, 1, 2)}">
+                                8.00
+                            </span>
+
+                            /
+
+                            <span th:text="${result.total}">
+                                10
+                            </span>
+
+                        </td>
+
+
+                        <!-- PERCENTAGE -->
+
+                        <td class="percentage-cell">
+
+                            <span th:text="${#numbers.formatDecimal((result.score * 100.0) / result.total, 1, 1)}">
+                                80.0
+                            </span>%
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span class="pass"
+                                  th:if="${result.total > 0 and (result.score * 100.0) / result.total >= 40}">
+                                ✓ Passed
+                            </span>
+
+                            <span class="fail"
+                                  th:if="${result.total > 0 and (result.score * 100.0) / result.total < 40}">
+                                ✕ Failed
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= NO RESULTS ================= -->
+
+    <div class="leaderboard-box"
+         th:if="${#lists.isEmpty(results)}">
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🏆
+            </div>
+
+            <h2>
+                No Results Yet
+            </h2>
+
+            <p>
+                Complete a quiz to appear on the leaderboard.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    Online Quiz System © 2026
+
+</footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Add Question - Admin</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+
+      font-family: Arial, sans-serif;
+
+      background: #f5f7fb;
+
+      color: #1f2937;
+    }
+
+    /* HEADER */
+
+    .header {
+      background: white;
+
+      padding: 18px 30px;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 21px;
+
+      font-weight: bold;
+
+      color: #4f46e5;
+    }
+
+    .back {
+      text-decoration: none;
+
+      color: #4f46e5;
+
+      font-weight: bold;
+    }
+
+    /* CONTAINER */
+
+    .container {
+      max-width: 850px;
+
+      margin: 35px auto;
+
+      padding: 0 20px;
+    }
+
+    .title {
+      margin-bottom: 25px;
+    }
+
+    .title h1 {
+      margin: 0 0 6px;
+
+      font-size: 29px;
+    }
+
+    .title p {
+      margin: 0;
+
+      color: #6b7280;
+    }
+
+    /* FORM CARD */
+
+    .form-card {
+      background: white;
+
+      padding: 30px;
+
+      border-radius: 18px;
+
+      box-shadow:
+              0 8px 25px
+              rgba(0, 0, 0, 0.06);
+    }
+
+    .row {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 20px;
+
+      margin-bottom: 20px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .row .field {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      font-weight: bold;
+
+      color: #374151;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+
+      padding: 12px 13px;
+
+      border: 1px solid #d1d5db;
+
+      border-radius: 9px;
+
+      font-size: 15px;
+
+      outline: none;
+
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #4f46e5;
+
+      box-shadow:
+              0 0 0 3px
+              rgba(79, 70, 229, 0.10);
+    }
+
+    textarea {
+      min-height: 110px;
+
+      resize: vertical;
+    }
+
+    /* OPTIONS */
+
+    .options-title {
+      font-size: 18px;
+
+      font-weight: bold;
+
+      margin: 25px 0 15px;
+
+      padding-top: 20px;
+
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .option {
+      display: grid;
+
+      grid-template-columns: 45px 1fr;
+
+      align-items: center;
+
+      margin-bottom: 14px;
+    }
+
+    .option-label {
+      width: 35px;
+
+      height: 35px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background: #eef2ff;
+
+      color: #4f46e5;
+
+      font-weight: bold;
+    }
+
+    /* BUTTONS */
+
+    .buttons {
+      display: flex;
+
+      gap: 12px;
+
+      margin-top: 25px;
+    }
+
+    .save-btn,
+    .cancel-btn {
+      flex: 1;
+
+      padding: 13px;
+
+      border-radius: 9px;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      text-align: center;
+
+      text-decoration: none;
+    }
+
+    .save-btn {
+      border: none;
+
+      background: #4f46e5;
+
+      color: white;
+    }
+
+    .save-btn:hover {
+      background: #4338ca;
+    }
+
+    .cancel-btn {
+      border: 1px solid #d1d5db;
+
+      background: white;
+
+      color: #374151;
+    }
+
+    .cancel-btn:hover {
+      background: #f9fafb;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 650px) {
+
+      .header {
+        padding: 15px 18px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        padding: 22px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header class="header">
+
+  <div class="logo">
+
+    🧠 Online Quiz Admin
+
+  </div>
+
+
+  <a
+          href="/admin"
+          class="back">
+
+    ← Dashboard
+
+  </a>
+
+</header>
+
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+
+  <div class="title">
+
+    <h1>
+
+      ➕ Add New Question
+
+    </h1>
+
+    <p>
+
+      Add a question to the quiz question bank.
+
+    </p>
+
+  </div>
+
+
+
+  <div class="form-card">
+
+
+    <form
+            action="/admin/question/add"
+            method="post">
+
+
+      <!-- ID + CATEGORY -->
+
+      <div class="row">
+
+
+        <!-- QUESTION ID -->
+
+        <div class="field">
+
+          <label for="id">
+
+            🆔 Question ID
+
+          </label>
+
+          <input
+                  type="number"
+                  id="id"
+                  name="id"
+                  placeholder="Enter Question ID"
+                  min="1"
+                  required>
+
+        </div>
+
+
+
+        <!-- CATEGORY -->
+
+        <div class="field">
+
+          <label for="category">
+
+            📚 Category
+
+          </label>
+
+          <select
+                  id="category"
+                  name="category"
+                  required>
+
+            <option value="">
+
+              Select Category
+
+            </option>
+
+            <option value="Java">
+
+              Java
+
+            </option>
+
+            <option value="DSA">
+
+              Data Structures & Algorithms
+
+            </option>
+
+            <option value="C Programming">
+
+              C Programming
+
+            </option>
+
+            <option value="Software Engineering">
+
+              Software Engineering
+
+            </option>
+
+          </select>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- DIFFICULTY -->
+
+      <div class="field">
+
+        <label for="difficulty">
+
+          🎚️ Difficulty
+
+        </label>
+
+        <select
+                id="difficulty"
+                name="difficulty"
+                required>
+
+          <option value="">
+
+            Select Difficulty
+
+          </option>
+
+          <option value="Easy">
+
+            🟢 Easy
+
+          </option>
+
+          <option value="Medium">
+
+            🟡 Medium
+
+          </option>
+
+          <option value="Hard">
+
+            🔴 Hard
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- QUESTION -->
+
+      <div class="field">
+
+        <label for="question">
+
+          ❓ Question
+
+        </label>
+
+        <textarea
+                id="question"
+                name="question"
+                placeholder="Enter the question here..."
+                required></textarea>
+
+      </div>
+
+
+
+      <!-- OPTIONS -->
+
+      <div class="options-title">
+
+        📝 Answer Options
+
+      </div>
+
+
+
+      <!-- OPTION A -->
+
+      <div class="option">
+
+        <div class="option-label">
+
+          A
+
+        </div>
+
+        <input
+                type="text"
+                name="optionA"
+                placeholder="Enter option A"
+                required>
+
+      </div>
+
+
+
+      <!-- OPTION B -->
+
+      <div class="option">
+
+        <div class="option-label">
+
+          B
+
+        </div>
+
+        <input
+                type="text"
+                name="optionB"
+                placeholder="Enter option B"
+                required>
+
+      </div>
+
+
+
+      <!-- OPTION C -->
+
+      <div class="option">
+
+        <div class="option-label">
+
+          C
+
+        </div>
+
+        <input
+                type="text"
+                name="optionC"
+                placeholder="Enter option C"
+                required>
+
+      </div>
+
+
+
+      <!-- OPTION D -->
+
+      <div class="option">
+
+        <div class="option-label">
+
+          D
+
+        </div>
+
+        <input
+                type="text"
+                name="optionD"
+                placeholder="Enter option D"
+                required>
+
+      </div>
+
+
+
+      <!-- CORRECT ANSWER -->
+
+      <div class="field">
+
+        <label for="correctAnswer">
+
+          ✅ Correct Answer
+
+        </label>
+
+        <select
+                id="correctAnswer"
+                name="correctAnswer"
+                required>
+
+          <option value="">
+
+            Select Correct Answer
+
+          </option>
+
+          <option value="A">
+
+            A
+
+          </option>
+
+          <option value="B">
+
+            B
+
+          </option>
+
+          <option value="C">
+
+            C
+
+          </option>
+
+          <option value="D">
+
+            D
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- BUTTONS -->
+
+      <div class="buttons">
+
+
+        <a
+                href="/admin"
+                class="cancel-btn">
+
+          Cancel
+
+        </a>
+
+
+        <button
+                type="submit"
+                class="save-btn">
+
+          💾 Save Question
+
+        </button>
+
+
+      </div>
+
+
+    </form>
+
+
+  </div>
+
+
+</main>
+
+
+</body>
+
+</html>

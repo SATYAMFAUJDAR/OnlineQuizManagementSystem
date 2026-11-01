@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz Result - Online Quiz</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav {
+            display: flex;
+            gap: 22px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 92%;
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        /* ================= TITLE ================= */
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .result-icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .result-header h1 {
+            font-size: 36px;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .result-header p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        /* ================= STUDENT CARD ================= */
+
+        .student-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 7px 25px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            font-size: 65px;
+            margin-bottom: 10px;
+        }
+
+        .student-card h2 {
+            color: #2563eb;
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .category {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 25px;
+            border-radius: 30px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .status.failed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* ================= SCORE ================= */
+
+        .score-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 7px 25px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .score-label {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .score {
+            font-size: 52px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .out-of {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .percentage {
+            margin-top: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            margin: 30px 0 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px 12px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+        }
+
+        .stat-icon {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-name {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .correct .stat-number {
+            color: #16a34a;
+        }
+
+        .wrong .stat-number {
+            color: #dc2626;
+        }
+
+        .skipped .stat-number {
+            color: #d97706;
+        }
+
+        .accuracy .stat-number {
+            color: #2563eb;
+        }
+
+        /* ================= NEGATIVE MARKS ================= */
+
+        .negative-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+        }
+
+        .negative-card h3 {
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .negative-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        /* ================= MARKING SCHEME ================= */
+
+        .scheme {
+            background: #eef6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .scheme h3 {
+            margin-bottom: 12px;
+            color: #1e40af;
+        }
+
+        .scheme p {
+            color: #475569;
+            margin: 6px 0;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 9px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .again {
+            background: #2563eb;
+            color: white;
+        }
+
+        .leaderboard {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .dashboard {
+            background: #059669;
+            color: white;
+        }
+
+        .home {
+            background: #475569;
+            color: white;
+        }
+
+        .certificate {
+            background: #d97706;
+            color: white;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 800px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .result-header h1 {
+                font-size: 29px;
+            }
+
+            .score {
+                font-size: 43px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="logo">
+        🧠 Online Quiz
+    </div>
+
+    <nav class="nav">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/leaderboard">
+            Leaderboard
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <!-- RESULT TITLE -->
+
+    <div class="result-header">
+
+        <div class="result-icon">
+            🎉
+        </div>
+
+        <h1>
+            Quiz Completed!
+        </h1>
+
+        <p>
+            Great job! Here is your quiz result.
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= STUDENT ================= -->
+
+    <div class="student-card">
+
+        <div class="avatar"
+             th:text="${avatar}">
+            👨‍💻
+        </div>
+
+        <h2 th:text="${name}">
+            Student Name
+        </h2>
+
+        <div class="category">
+
+            Category:
+            <strong th:text="${category}">
+                Java
+            </strong>
+
+        </div>
+
+
+        <!-- PASS -->
+
+        <div class="status"
+             th:if="${accuracyValue >= 40}">
+            ✅ Passed
+        </div>
+
+
+        <!-- FAIL -->
+
+        <div class="status failed"
+             th:if="${accuracyValue < 40}">
+            ❌ Failed
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= SCORE ================= -->
+
+    <div class="score-card">
+
+        <div class="score-label">
+            Final Score
+        </div>
+
+        <div class="score"
+             th:text="${#numbers.formatDecimal(score, 1, 2)}">
+            0.00
+        </div>
+
+        <div class="out-of">
+
+            out of
+            <strong th:text="${total}">
+                10
+            </strong>
+
+        </div>
+
+        <div class="percentage">
+
+            <span th:text="${#numbers.formatDecimal(accuracyValue, 1, 1)}">
+                0.0
+            </span>%
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= DETAILED ANALYSIS ================= -->
+
+    <h2 class="section-title">
+        📊 Detailed Analysis
+    </h2>
+
+
+    <div class="stats">
+
+
+        <!-- CORRECT -->
+
+        <div class="stat-card correct">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div class="stat-number"
+                 th:text="${correct}">
+                0
+            </div>
+
+            <div class="stat-name">
+                Correct
+            </div>
+
+        </div>
+
+
+        <!-- WRONG -->
+
+        <div class="stat-card wrong">
+
+            <div class="stat-icon">
+                ❌
+            </div>
+
+            <div class="stat-number"
+                 th:text="${wrong}">
+                0
+            </div>
+
+            <div class="stat-name">
+                Wrong
+            </div>
+
+        </div>
+
+
+        <!-- SKIPPED -->
+
+        <div class="stat-card skipped">
+
+            <div class="stat-icon">
+                ⏭️
+            </div>
+
+            <div class="stat-number"
+                 th:text="${skipped}">
+                0
+            </div>
+
+            <div class="stat-name">
+                Skipped
+            </div>
+
+        </div>
+
+
+        <!-- ACCURACY -->
+
+        <div class="stat-card accuracy">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <div class="stat-number">
+
+                <span th:text="${#numbers.formatDecimal(accuracyValue, 1, 1)}">
+                    0.0
+                </span>%
+
+            </div>
+
+            <div class="stat-name">
+                Accuracy
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= NEGATIVE MARKS ================= -->
+
+    <div class="negative-card">
+
+        <h3>
+            Negative Marks
+        </h3>
+
+        <div class="negative-value">
+
+            -
+            <span th:text="${#numbers.formatDecimal(negativeMarks, 1, 2)}">
+                0.00
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= MARKING SCHEME ================= -->
+
+    <div class="scheme">
+
+        <h3>
+            📌 Marking Scheme
+        </h3>
+
+        <p>
+            ✅ Correct Answer: <strong>+1.00 mark</strong>
+        </p>
+
+        <p>
+            ❌ Wrong Answer: <strong>-0.25 mark</strong>
+        </p>
+
+        <p>
+            ⏭️ Skipped Answer: <strong>0 mark</strong>
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= BUTTONS ================= -->
+
+    <div class="buttons">
+
+
+        <a href="/student"
+           class="btn again">
+            🔄 Take Quiz Again
+        </a>
+
+
+        <a href="/leaderboard"
+           class="btn leaderboard">
+            🏆 Leaderboard
+        </a>
+
+
+        <a href="/dashboard"
+           class="btn dashboard">
+            📊 Dashboard
+        </a>
+
+
+        <a href="/certificate"
+           class="btn certificate">
+            📜 Certificate
+        </a>
+
+
+        <a href="/"
+           class="btn home">
+            🏠 Home
+        </a>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    Online Quiz System © 2026
+
+</footer>
+
+
+</body>
+
+</html>

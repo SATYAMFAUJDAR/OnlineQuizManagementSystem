@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Online Quiz</title>
+
+    <style>
+
+        .passed {
+            color: #15803d;
+            background: #dcfce7;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .failed {
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #111827;
+        }
+
+        .navbar {
+            background: white;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 7%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #6b7280;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow:
+                    0 8px 25px rgba(0,0,0,0.07);
+        }
+
+        .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            color: #2563eb;
+            font-size: 30px;
+        }
+
+        .stat-card p {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .history {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow:
+                    0 8px 25px rgba(0,0,0,0.07);
+            overflow-x: auto;
+        }
+
+        .history h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+            padding: 13px;
+            text-align: left;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .percentage {
+            font-weight: bold;
+            color: #16a34a;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn.secondary {
+            background: #374151;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 700px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 5%;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🧠 Online Quiz
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/student">
+            Take Quiz
+        </a>
+
+        <a href="/leaderboard">
+            Leaderboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>
+            Welcome,
+            <span th:text="${studentName}">
+                Student
+            </span>
+            👋
+        </h1>
+
+        <p>
+            Track your quiz performance and history.
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="icon">📝</div>
+
+            <h2 th:text="${totalQuizzes}">
+                0
+            </h2>
+
+            <p>Total Quizzes</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="icon">🏆</div>
+
+            <h2>
+                <span th:text="${bestScore}">
+                    0
+                </span>%
+            </h2>
+
+            <p>Best Score</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="icon">📊</div>
+
+            <h2>
+                <span th:text="${averageScore}">
+                    0
+                </span>%
+            </h2>
+
+            <p>Average Score</p>
+
+        </div>
+
+    </div>
+
+
+    <div class="history">
+
+        <h2>
+            📚 My Quiz History
+        </h2>
+
+
+        <table th:if="${results != null and !results.isEmpty()}">
+
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Category</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Result</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="result, stat : ${results}">
+
+                <!-- Quiz Number -->
+                <td th:text="${stat.index + 1}">
+                    1
+                </td>
+
+                <!-- Category -->
+                <td th:text="${result.category}">
+                    Java
+                </td>
+
+                <!-- Score -->
+                <td class="score"
+                    th:text="${result.score + ' / ' + result.total}">
+                    8 / 10
+                </td>
+
+                <!-- Percentage -->
+                <td class="percentage"
+                    th:text="${result.total > 0 ?
+            #numbers.formatDecimal(
+            (result.score * 100.0 / result.total),
+            1, 1) + '%' : '0%'}">
+                    80%
+                </td>
+
+                <!-- Result -->
+                <td>
+
+            <span
+                    class="passed"
+                    th:if="${result.total > 0 and
+                (result.score * 100.0 / result.total) >= 40}">
+                ✅ Passed
+            </span>
+
+                    <span
+                            class="failed"
+                            th:if="${result.total > 0 and
+                (result.score * 100.0 / result.total) < 40}">
+                ❌ Failed
+            </span>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="empty"
+             th:if="${results == null or results.isEmpty()}">
+
+            <p>
+                You haven't completed any quiz yet.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <a href="/student"
+           class="btn">
+            🎯 Take New Quiz
+        </a>
+
+        <a href="/leaderboard"
+           class="btn secondary">
+            🏆 Leaderboard
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

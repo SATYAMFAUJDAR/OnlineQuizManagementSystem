@@ -1,0 +1,20 @@
+1|Java|Easy|Which keyword is used to create an object?|new|class|object|create|A
+2|Java|Easy|Which method is the entry point of a Java program?|start()|main()|run()|execute()|B
+3|Java|Medium|Which concept allows a class to have multiple methods with the same name?|Inheritance|Encapsulation|Overloading|Abstraction|C
+4|Java|Medium|Which keyword is used to inherit a class?|implements|extends|inherits|super|B
+5|Java|Hard|Which collection does not allow duplicate elements?|List|ArrayList |Set|Queue|C
+6|DSA|Easy|Which data structure follows LIFO?|Queue|Stack|Array|Tree|B
+7|DSA|Easy|Which data structure follows FIFO?|Stack|Tree|Queue|Graph|C
+8|DSA|Medium|What is the time complexity of binary search?|O(n)|O(log n)|O(n²)|O(1)|B
+9|DSA|Medium|Which traversal uses a queue in a tree?|DFS|BFS|Inorder|Postorder|B
+10|DSA|Hard|What is the average time complexity of searching in a balanced BST?|O(n)|O(log n)|O(n²)|O(1)|B
+11|C Programming|Easy|Which symbol is used to end a statement in C?|:|.|;|,|C
+12|C Programming|Easy|Which function is used to print output in C?|input()|printf()|print()|output()|B
+13|C Programming|Medium|Which operator is used to access the value at an address?|&|*|#|@|B
+14|C Programming|Medium|Which loop executes at least once?|for|while|do-while|nested loop|C
+15|C Programming|Medium|Which function is used to dynamically allocate memory?|malloc()|alloc()|memory()|new()|A
+16|Software Engineering|Easy|What does SDLC stand for?|Software Design Life Cycle|Software Development Life Cycle|System Development Life Cycle|Software Data Life Cycle|B
+17|Software Engineering|Easy|Which model follows a sequential development approach?|Agile|Spiral|V-Model|Big Bang|B
+18|Software Engineering|Medium|Which model focuses on iterative development?|Waterfall|Agile|V-Model|Big Bang|B
+19|Software Engineering|Medium|What is software testing used for?|Writing code|Finding defects|Designing hardware|Managing users|B
+20|Software Engineering|Hard|What does COCOMO primarily estimate?|Database size|Software effort and cost|Network speed|Hardware cost|B

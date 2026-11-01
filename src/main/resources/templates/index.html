@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Online Quiz System</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                    Arial,
+                    sans-serif;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #eef2ff,
+                            #f8fafc
+                    );
+
+            min-height: 100vh;
+
+            color: #1f2937;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+
+            height: 70px;
+
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 7%;
+
+            box-shadow:
+                    0 3px 15px
+                    rgba(0,0,0,0.08);
+        }
+
+
+        .logo {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #4f46e5;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 25px;
+
+            align-items: center;
+        }
+
+
+        .nav-links a {
+
+            text-decoration: none;
+
+            color: #374151;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .nav-links a:hover {
+
+            color: #4f46e5;
+        }
+
+
+        /* ================= HERO ================= */
+
+        .hero {
+
+            max-width: 1100px;
+
+            margin: 70px auto;
+
+            padding: 20px;
+
+            display: grid;
+
+            grid-template-columns:
+                    1.2fr 1fr;
+
+            gap: 60px;
+
+            align-items: center;
+        }
+
+
+        .hero h1 {
+
+            font-size: 50px;
+
+            margin: 0 0 20px;
+
+            line-height: 1.1;
+        }
+
+
+        .hero h1 span {
+
+            color: #4f46e5;
+        }
+
+
+        .hero p {
+
+            font-size: 18px;
+
+            color: #6b7280;
+
+            line-height: 1.7;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        .buttons {
+
+            display: flex;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .btn {
+
+            padding: 14px 25px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            display: inline-block;
+        }
+
+
+        .student-btn {
+
+            background: #4f46e5;
+
+            color: white;
+        }
+
+
+        .student-btn:hover {
+
+            background: #4338ca;
+        }
+
+
+        .admin-btn {
+
+            background: white;
+
+            color: #4f46e5;
+
+            border: 2px solid #4f46e5;
+        }
+
+
+        .admin-btn:hover {
+
+            background: #eef2ff;
+        }
+
+
+        /* ================= ILLUSTRATION ================= */
+
+        .illustration {
+
+            background: white;
+
+            border-radius: 25px;
+
+            padding: 40px;
+
+            text-align: center;
+
+            box-shadow:
+                    0 15px 40px
+                    rgba(0,0,0,0.10);
+        }
+
+
+        .quiz-icon {
+
+            font-size: 120px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .illustration h2 {
+
+            margin: 10px 0;
+
+            color: #4f46e5;
+        }
+
+
+        .illustration p {
+
+            font-size: 14px;
+
+            color: #6b7280;
+        }
+
+
+        /* ================= FEATURES ================= */
+
+        .features {
+
+            max-width: 1100px;
+
+            margin: 0 auto 60px;
+
+            padding: 20px;
+        }
+
+
+        .features h2 {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .feature-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                    repeat(4, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .feature {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            box-shadow:
+                    0 5px 20px
+                    rgba(0,0,0,0.07);
+        }
+
+
+        .feature-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .feature h3 {
+
+            margin: 10px 0;
+        }
+
+
+        .feature p {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+
+            background: #111827;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 25px;
+
+            margin-top: 30px;
+        }
+
+
+        footer p {
+
+            margin: 5px;
+
+            color: #d1d5db;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 800px) {
+
+            .navbar {
+
+                padding: 0 20px;
+            }
+
+
+            .nav-links {
+
+                gap: 12px;
+            }
+
+
+            .hero {
+
+                grid-template-columns: 1fr;
+
+                margin-top: 40px;
+
+                text-align: center;
+
+                gap: 30px;
+            }
+
+
+            .hero h1 {
+
+                font-size: 38px;
+            }
+
+
+            .buttons {
+
+                justify-content: center;
+            }
+
+
+            .feature-grid {
+
+                grid-template-columns:
+                        repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .nav-links a:nth-child(1) {
+
+                display: none;
+            }
+
+
+            .feature-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+
+    <div class="logo">
+
+        🧠 Online Quiz
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/leaderboard">
+            🏆 Leaderboard
+        </a>
+
+        <a href="/admin/login">
+            ⚙️ Admin
+        </a>
+
+    </div>
+
+
+</nav>
+
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+
+    <div>
+
+
+        <h1>
+
+            Test Your
+
+            <span>
+                Knowledge
+            </span>
+
+            & Learn
+
+        </h1>
+
+
+        <p>
+
+            Welcome to the Online Quiz System.
+            Choose your subject, select difficulty
+            and challenge yourself with an interactive
+            quiz.
+
+        </p>
+
+
+        <div class="buttons">
+
+
+            <a
+                    href="/student"
+                    class="btn student-btn">
+
+                🎯 Start Quiz
+
+            </a>
+
+
+            <a
+                    href="/leaderboard"
+                    class="btn admin-btn">
+
+                🏆 Leaderboard
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ILLUSTRATION -->
+
+    <div class="illustration">
+
+
+        <div class="quiz-icon">
+
+            📝
+
+        </div>
+
+
+        <h2>
+
+            Ready to Quiz?
+
+        </h2>
+
+
+        <p>
+
+            Java • DSA • C Programming
+            • Software Engineering
+
+        </p>
+
+
+        <p>
+
+            Easy • Medium • Hard
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features">
+
+
+    <h2>
+
+        ✨ Why Use Our Quiz System?
+
+    </h2>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature">
+
+
+            <div class="feature-icon">
+
+                📚
+
+            </div>
+
+
+            <h3>
+
+                Multiple Subjects
+
+            </h3>
+
+
+            <p>
+
+                Test yourself across
+                different programming
+                and engineering subjects.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="feature">
+
+
+            <div class="feature-icon">
+
+                ⏱️
+
+            </div>
+
+
+            <h3>
+
+                Timed Quiz
+
+            </h3>
+
+
+            <p>
+
+                Complete your quiz
+                within the given time.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="feature">
+
+
+            <div class="feature-icon">
+
+                🏆
+
+            </div>
+
+
+            <h3>
+
+                Leaderboard
+
+            </h3>
+
+
+            <p>
+
+                Compare your quiz
+                performance with others.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="feature">
+
+
+            <div class="feature-icon">
+
+                📊
+
+            </div>
+
+
+            <h3>
+
+                Instant Result
+
+            </h3>
+
+
+            <p>
+
+                Get your score and
+                percentage immediately.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+
+    <p>
+
+        © 2026 Online Quiz System
+
+    </p>
+
+
+    <p>
+
+        Learn • Practice • Improve
+
+    </p>
+
+
+</footer>
+
+
+</body>
+
+</html>

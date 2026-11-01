@@ -1,0 +1,15 @@
+Satyam Faujdar|Java|1|1
+Shivam Kumar|Java|0|1
+Sundram Sinsinwar|Java|1|1
+Om |Java|0|1
+Deepak|Java|1|1
+Rohit Sharma|Java|1|1
+Dileep Lawaniya |Java|1|1
+Saurabh |Java|1|1
+Gaurav|Java|1|1
+Narendra |Java|0|1
+Satyam Faujdar|DSA|2.0|2
+Shivam Kumar|DSA|0.75|2
+Sundram Sinsinwar|DSA|2.0|2
+Satyam Faujdar 😎|Java|2.0|2
+RAHUL|Java|2.0|2

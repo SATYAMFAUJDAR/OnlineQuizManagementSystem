@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Quiz</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* HEADER */
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .quiz-info {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .category {
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .timer {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .timer.warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        /* MAIN */
+
+        .container {
+            max-width: 900px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* PROGRESS */
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #2563eb;
+            transition: 0.3s;
+        }
+
+        /* QUESTION */
+
+        .question-card {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-number {
+            color: #2563eb;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 21px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        /* OPTIONS */
+
+        .option {
+            display: block;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option-box {
+            padding: 15px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-box:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .option input:checked + .option-box {
+            border-color: #2563eb;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .option input:checked + .option-box .option-letter {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* BUTTONS */
+
+        .navigation {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .prev-btn {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .next-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .review-btn {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .mark-btn {
+            margin-top: 18px;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .mark-btn.marked {
+            background: #fde68a;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* REVIEW PANEL */
+
+        .review-panel {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .review-panel.active {
+            display: block;
+        }
+
+        .review-title {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .review-subtitle {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .review-item {
+            padding: 14px 8px;
+            border-radius: 10px;
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .review-item.answered {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+        }
+
+        .review-item.unanswered {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }
+
+        .review-item.marked {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .green {
+            background: #22c55e;
+        }
+
+        .red {
+            background: #ef4444;
+        }
+
+        .yellow {
+            background: #f59e0b;
+        }
+
+        .review-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .submit-btn {
+            background: #16a34a;
+            color: white;
+            padding: 13px 28px;
+        }
+
+        /* EMPTY */
+
+        .message {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 15px;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 12px 15px;
+            }
+
+            .quiz-info {
+                gap: 10px;
+            }
+
+            .category {
+                display: none;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .review-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .navigation {
+                flex-wrap: wrap;
+            }
+
+            .review-actions {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="logo">
+        🧠 Online Quiz
+    </div>
+
+    <div class="quiz-info">
+
+        <div class="category">
+            Category:
+            <span th:text="${category}">Java</span>
+        </div>
+
+        <div class="timer" id="timer">
+            05:00
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="container">
+
+    <!-- NO QUESTIONS -->
+
+    <div class="message" th:if="${message}">
+
+        <p th:text="${message}">
+            No questions available.
+        </p>
+
+    </div>
+
+
+    <!-- QUIZ FORM -->
+
+    <form id="quizForm"
+          th:if="${questions != null and !questions.isEmpty()}"
+          action="/quiz/submit"
+          method="post">
+
+
+        <!-- PROGRESS -->
+
+        <div class="progress-info">
+
+            <span>
+                Question
+                <span id="currentNumber">1</span>
+                /
+                <span th:text="${questions.size()}">10</span>
+            </span>
+
+            <span id="answeredCount">
+                0 Answered
+            </span>
+
+        </div>
+
+
+        <div class="progress-container">
+
+            <div class="progress-bar" id="progressBar"></div>
+
+        </div>
+
+
+        <!-- QUESTIONS -->
+
+        <div th:each="q, stat : ${questions}"
+             class="question-card"
+             th:classappend="${stat.index == 0 ? 'active' : ''}"
+             th:attr="data-index=${stat.index}">
+
+
+            <div class="question-number">
+
+                Question
+                <span th:text="${stat.index + 1}">
+                    1
+                </span>
+
+            </div>
+
+
+            <div class="question-text"
+                 th:text="${q.question}">
+
+                Question goes here
+
+            </div>
+
+
+            <!-- OPTION A -->
+
+            <label class="option">
+
+                <input type="radio"
+                       th:name="|answers[${stat.index}]|"
+                       value="A">
+
+                <div class="option-box">
+
+                    <div class="option-letter">
+                        A
+                    </div>
+
+                    <div th:text="${q.optionA}">
+                        Option A
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <!-- OPTION B -->
+
+            <label class="option">
+
+                <input type="radio"
+                       th:name="|answers[${stat.index}]|"
+                       value="B">
+
+                <div class="option-box">
+
+                    <div class="option-letter">
+                        B
+                    </div>
+
+                    <div th:text="${q.optionB}">
+                        Option B
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <!-- OPTION C -->
+
+            <label class="option">
+
+                <input type="radio"
+                       th:name="|answers[${stat.index}]|"
+                       value="C">
+
+                <div class="option-box">
+
+                    <div class="option-letter">
+                        C
+                    </div>
+
+                    <div th:text="${q.optionC}">
+                        Option C
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <!-- OPTION D -->
+
+            <label class="option">
+
+                <input type="radio"
+                       th:name="|answers[${stat.index}]|"
+                       value="D">
+
+                <div class="option-box">
+
+                    <div class="option-letter">
+                        D
+                    </div>
+
+                    <div th:text="${q.optionD}">
+                        Option D
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <!-- MARK FOR REVIEW -->
+
+            <button type="button"
+                    class="mark-btn"
+                    onclick="toggleMarkReview()">
+
+                ⭐ Mark for Review
+
+            </button>
+
+
+            <!-- NAVIGATION -->
+
+            <div class="navigation">
+
+                <button type="button"
+                        class="prev-btn"
+                        id="prevBtn"
+                        onclick="previousQuestion()">
+
+                    ← Previous
+
+                </button>
+
+
+                <button type="button"
+                        class="review-btn"
+                        onclick="openReview()">
+
+                    📋 Review
+
+                </button>
+
+
+                <button type="button"
+                        class="next-btn"
+                        id="nextBtn"
+                        onclick="nextQuestion()">
+
+                    Next →
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- REVIEW PANEL -->
+
+        <div class="review-panel" id="reviewPanel">
+
+            <h2 class="review-title">
+                📋 Review Your Answers
+            </h2>
+
+            <p class="review-subtitle">
+                Check your answers before submitting the quiz.
+            </p>
+
+
+            <!-- LEGEND -->
+
+            <div class="legend">
+
+                <span>
+                    <span class="legend-box green"></span>
+                    Answered
+                </span>
+
+                <span>
+                    <span class="legend-box red"></span>
+                    Not Answered
+                </span>
+
+                <span>
+                    <span class="legend-box yellow"></span>
+                    Marked for Review
+                </span>
+
+            </div>
+
+
+            <!-- QUESTION GRID -->
+
+            <div class="review-grid"
+                 id="reviewGrid">
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="review-actions">
+
+                <button type="button"
+                        class="back-btn"
+                        onclick="closeReview()">
+
+                    ← Back to Quiz
+
+                </button>
+
+
+                <button type="submit"
+                        class="submit-btn"
+                        onclick="return confirmSubmit()">
+
+                    ✅ Submit Quiz
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    /* ==============================
+       VARIABLES
+    ============================== */
+
+    const questions =
+        document.querySelectorAll(".question-card");
+
+    const reviewPanel =
+        document.getElementById("reviewPanel");
+
+    const reviewGrid =
+        document.getElementById("reviewGrid");
+
+    const currentNumber =
+        document.getElementById("currentNumber");
+
+    const progressBar =
+        document.getElementById("progressBar");
+
+    const answeredCount =
+        document.getElementById("answeredCount");
+
+    const timerElement =
+        document.getElementById("timer");
+
+    let currentQuestion = 0;
+
+    let markedQuestions = [];
+
+    let timeLeft = 300;
+
+    let quizSubmitted = false;
+
+
+    /* ==============================
+       INITIALIZE MARKED ARRAY
+    ============================== */
+
+    for (let i = 0; i < questions.length; i++) {
+
+        markedQuestions.push(false);
+
+    }
+
+
+    /* ==============================
+       SHOW QUESTION
+    ============================== */
+
+    function showQuestion(index) {
+
+        if (questions.length === 0) {
+            return;
+        }
+
+        if (index < 0) {
+            index = 0;
+        }
+
+        if (index >= questions.length) {
+            index = questions.length - 1;
+        }
+
+        currentQuestion = index;
+
+
+        /* Hide all */
+
+        questions.forEach(function(question) {
+
+            question.classList.remove("active");
+
+        });
+
+
+        /* Show current */
+
+        questions[index].classList.add("active");
+
+
+        /* Question number */
+
+        currentNumber.textContent =
+            index + 1;
+
+
+        /* Progress */
+
+        let progress =
+            ((index + 1) / questions.length) * 100;
+
+        progressBar.style.width =
+            progress + "%";
+
+
+        /* Previous */
+
+        const prevBtn =
+            document.getElementById("prevBtn");
+
+        if (prevBtn) {
+
+            prevBtn.disabled =
+                index === 0;
+
+        }
+
+
+        /* Next */
+
+        const nextBtn =
+            document.getElementById("nextBtn");
+
+        if (nextBtn) {
+
+            if (index === questions.length - 1) {
+
+                nextBtn.textContent =
+                    "📋 Review Answers";
+
+            } else {
+
+                nextBtn.textContent =
+                    "Next →";
+
+            }
+
+        }
+
+
+        updateMarkButton();
+
+        updateAnsweredCount();
+
+    }
+
+
+    /* ==============================
+       NEXT QUESTION
+    ============================== */
+
+    function nextQuestion() {
+
+        if (currentQuestion <
+            questions.length - 1) {
+
+            currentQuestion++;
+
+            showQuestion(currentQuestion);
+
+        } else {
+
+            openReview();
+
+        }
+
+    }
+
+
+    /* ==============================
+       PREVIOUS QUESTION
+    ============================== */
+
+    function previousQuestion() {
+
+        if (currentQuestion > 0) {
+
+            currentQuestion--;
+
+            showQuestion(currentQuestion);
+
+        }
+
+    }
+
+
+    /* ==============================
+       MARK FOR REVIEW
+    ============================== */
+
+    function toggleMarkReview() {
+
+        markedQuestions[currentQuestion] =
+            !markedQuestions[currentQuestion];
+
+        updateMarkButton();
+
+        updateReview();
+
+    }
+
+
+    /* ==============================
+       UPDATE MARK BUTTON
+    ============================== */
+
+    function updateMarkButton() {
+
+        const button =
+            questions[currentQuestion]
+                .querySelector(".mark-btn");
+
+        if (!button) {
+            return;
+        }
+
+
+        if (markedQuestions[currentQuestion]) {
+
+            button.textContent =
+                "⭐ Marked for Review";
+
+            button.classList.add("marked");
+
+        } else {
+
+            button.textContent =
+                "⭐ Mark for Review";
+
+            button.classList.remove("marked");
+
+        }
+
+    }
+
+
+    /* ==============================
+       CHECK ANSWER
+    ============================== */
+
+    function isAnswered(index) {
+
+        const answer =
+            document.querySelector(
+                'input[name="answers[' + index + ']"]:checked'
+            );
+
+        return answer !== null;
+
+    }
+
+
+    /* ==============================
+       ANSWERED COUNT
+    ============================== */
+
+    function updateAnsweredCount() {
+
+        let count = 0;
+
+        for (let i = 0; i < questions.length; i++) {
+
+            if (isAnswered(i)) {
+
+                count++;
+
+            }
+
+        }
+
+        answeredCount.textContent =
+            count + " Answered";
+
+    }
+
+
+    /* ==============================
+       OPEN REVIEW
+    ============================== */
+
+    function openReview() {
+
+        updateReview();
+
+        questions.forEach(function(question) {
+
+            question.classList.remove("active");
+
+        });
+
+        reviewPanel.classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* ==============================
+       CLOSE REVIEW
+    ============================== */
+
+    function closeReview() {
+
+        reviewPanel.classList.remove("active");
+
+        showQuestion(currentQuestion);
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* ==============================
+       UPDATE REVIEW GRID
+    ============================== */
+
+    function updateReview() {
+
+        reviewGrid.innerHTML = "";
+
+
+        for (let i = 0; i < questions.length; i++) {
+
+            const button =
+                document.createElement("div");
+
+            button.classList.add("review-item");
+
+
+            /* Status */
+
+            if (markedQuestions[i]) {
+
+                button.classList.add("marked");
+
+                button.innerHTML =
+                    "⭐ Q" + (i + 1);
+
+            } else if (isAnswered(i)) {
+
+                button.classList.add("answered");
+
+                button.innerHTML =
+                    "✓ Q" + (i + 1);
+
+            } else {
+
+                button.classList.add("unanswered");
+
+                button.innerHTML =
+                    "✕ Q" + (i + 1);
+
+            }
+
+
+            /* Click */
+
+            button.onclick = function() {
+
+                reviewPanel.classList.remove("active");
+
+                showQuestion(i);
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+
+            };
+
+
+            reviewGrid.appendChild(button);
+
+        }
+
+        updateAnsweredCount();
+
+    }
+
+
+    /* ==============================
+       SUBMIT CONFIRMATION
+    ============================== */
+
+    function confirmSubmit() {
+
+        let unanswered = 0;
+
+        for (let i = 0; i < questions.length; i++) {
+
+            if (!isAnswered(i)) {
+
+                unanswered++;
+
+            }
+
+        }
+
+
+        if (unanswered > 0) {
+
+            return confirm(
+                "You have " +
+                unanswered +
+                " unanswered question(s).\n\n" +
+                "Do you still want to submit the quiz?"
+            );
+
+        }
+
+
+        return confirm(
+            "Are you sure you want to submit the quiz?"
+        );
+
+    }
+
+
+    /* ==============================
+       TIMER
+    ============================== */
+
+    function updateTimer() {
+
+        let minutes =
+            Math.floor(timeLeft / 60);
+
+        let seconds =
+            timeLeft % 60;
+
+
+        let minuteText =
+            minutes < 10
+                ? "0" + minutes
+                : minutes;
+
+        let secondText =
+            seconds < 10
+                ? "0" + seconds
+                : seconds;
+
+
+        timerElement.textContent =
+            minuteText + ":" + secondText;
+
+
+        /* Warning */
+
+        if (timeLeft <= 30) {
+
+            timerElement.classList.add("warning");
+
+        }
+
+
+        /* Time over */
+
+        if (timeLeft <= 0) {
+
+            quizSubmitted = true;
+
+            alert(
+                "⏰ Time is over! Your quiz will be submitted automatically."
+            );
+
+            document.getElementById("quizForm").submit();
+
+            return;
+
+        }
+
+
+        timeLeft--;
+
+    }
+
+
+    /* ==============================
+       TIMER START
+    ============================== */
+
+    setInterval(function() {
+
+        if (!quizSubmitted) {
+
+            updateTimer();
+
+        }
+
+    }, 1000);
+
+
+    /* ==============================
+       RADIO CHANGE
+    ============================== */
+
+    document
+        .getElementById("quizForm")
+        ?.addEventListener("change", function(event) {
+
+            if (event.target.type === "radio") {
+
+                updateAnsweredCount();
+
+                updateReview();
+
+            }
+
+        });
+
+
+    /* ==============================
+       FORM SUBMIT
+    ============================== */
+
+    document
+        .getElementById("quizForm")
+        ?.addEventListener("submit", function() {
+
+            quizSubmitted = true;
+
+        });
+
+
+    /* ==============================
+       START
+    ============================== */
+
+    if (questions.length > 0) {
+
+        showQuestion(0);
+
+        updateTimer();
+
+    }
+
+</script>
+
+</body>
+</html>
